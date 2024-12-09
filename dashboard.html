@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Admin Dashboard</h1>
+        <div class="admin-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>RAM (GB)</th>
+                        <th>CPU Cores</th>
+                        <th>Platform</th>
+                        <th>User Agent</th>
+                        <th>AutoCAD</th>
+                        <th>Solidworks</th>
+                        <th>Autodesk Inventor</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="laptopTable">
+                    <!-- Data dari pengguna akan tampil di sini -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!--<h1>Admin Dashboard</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>RAM (GB)</th>
+                <th>CPU Cores</th>
+                <th>Platform</th>
+                <th>User Agent</th>
+                <th>AutoCAD</th>
+                <th>Solidworks</th>
+                <th>Autodesk Inventor</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="laptopTable">
+        </tbody>
+    </table> -->
+
+    <script>
+        async function fetchDashboardData() {
+            try {
+                const response = await fetch("/dashboard-data");
+                if (response.ok) {
+                    const data = await response.json();
+
+                    const tableBody = document.getElementById("laptopTable");
+                    tableBody.innerHTML = data
+                        .map(
+                            (item) => `
+                            <tr>
+                                <td>${item.ram} GB</td>
+                                <td>${item.cores}</td>
+                                <td>${item.platform}</td>
+                                <td>${item.userAgent}</td>
+                                <td>${item.autocad ? "Compatible" : "Not Compatible"}</td>
+                                <td>${item.solidworks ? "Compatible" : "Not Compatible"}</td>
+                                <td>${item.autodeskInventor ? "Compatible" : "Not Compatible"}</td>
+                                <td>${new Date(item.timestamp).toLocaleString()}</td>
+                            </tr>
+                        `
+                        )
+                        .join("");
+                } else {
+                    console.error("Failed to fetch data:", response.status);
+                }
+            } catch (error) {
+                console.error("Error fetching dashboard data:", error);
+            }
+        }
+
+        // Muat data saat halaman dibuka
+        fetchDashboardData();
+    </script>
+</body>
+</html>
